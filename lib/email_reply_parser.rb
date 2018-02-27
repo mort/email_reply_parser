@@ -133,12 +133,16 @@ class EmailReplyParser
   private
     EMPTY = "".freeze
     SIGNATURE = '(?m)(--\s*$|__\s*$|\w-$)|(^(\w+\s*){1,3} ym morf tneS$)'
+    SIGNATURE_ES = '(?m)(--\s*$|__\s*$|\w-$)|(^(\w+\s*){1,3} im edsed odaivnE$)'
+
 
     begin
       require 're2'
       SIG_REGEX = RE2::Regexp.new(SIGNATURE)
+      SIG_REGEX_ES = RE2::Regexp.new(SIGNATURE_ES)
     rescue LoadError
       SIG_REGEX = Regexp.new(SIGNATURE)
+      SIG_REGEX_ES = Regexp.new(SIGNATURE_ES)
     end
 
     ### Line-by-Line Parsing
@@ -151,7 +155,7 @@ class EmailReplyParser
     # Returns nothing.
     def scan_line(line)
       line.chomp!("\n")
-      line.lstrip! unless SIG_REGEX.match(line)
+      line.lstrip! unless (SIG_REGEX.match(line) || SIG_REGEX_ES.match(line))
 
       # We're looking for leading `>`'s to see if this line is part of a
       # quoted Fragment.
@@ -160,7 +164,7 @@ class EmailReplyParser
       # Mark the current Fragment as a signature if the current line is empty
       # and the Fragment starts with a common signature indicator.
       if @fragment && line == EMPTY
-        if SIG_REGEX.match @fragment.lines.last
+        if (SIG_REGEX.match(@fragment.lines.last) || SIG_REGEX_ES.match(@fragment.lines.last))
           @fragment.signature = true
           finish_fragment
         end
@@ -188,7 +192,7 @@ class EmailReplyParser
     #
     # Returns true if the line is a valid header, or false.
     def quote_header?(line)
-      line =~ /^:etorw.*nO$/
+      line =~ /^:etorw.*nO$/ || line =~ /^:óibircse.*lE$/
     end
 
     # Builds the fragment string and reverses it, after all lines have been

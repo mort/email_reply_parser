@@ -56,6 +56,23 @@ I am currently using the Java HTTP API.\n", reply.fragments[0].to_s
     assert_match(/^_/, reply.fragments[4].to_s)
   end
 
+  def test_reads_top_post_es
+    reply = email(:es_email_1_3)
+    assert_equal 5, reply.fragments.size
+
+    assert_equal [false, false, true, false, false],
+      reply.fragments.map { |f| f.quoted? }
+    assert_equal [false, true, true, true, true],
+      reply.fragments.map { |f| f.hidden? }
+    assert_equal [false, true, false, false, true],
+      reply.fragments.map { |f| f.signature? }
+
+    assert_match(/^Muchas gracias.\n\nEstoy/, reply.fragments[0].to_s)
+    assert_match(/^-A/, reply.fragments[1].to_s)
+    assert_match(/^El [^\:]+\:/, reply.fragments[2].to_s)
+    assert_match(/^_/, reply.fragments[4].to_s)
+  end
+
   def test_reads_bottom_post
     reply = email(:email_1_2)
     assert_equal 6, reply.fragments.size
@@ -165,14 +182,29 @@ I am currently using the Java HTTP API.\n", reply.fragments[0].to_s
     assert_equal "Here is another email", EmailReplyParser.parse_reply(body)
   end
 
+  def test_parse_out_sent_from_iPhone_es
+    body = IO.read EMAIL_FIXTURE_PATH.join("es_email_iPhone.txt").to_s
+    assert_equal "Aquí otro email", EmailReplyParser.parse_reply(body)
+  end
+
   def test_parse_out_sent_from_BlackBerry
     body = IO.read EMAIL_FIXTURE_PATH.join("email_BlackBerry.txt").to_s
     assert_equal "Here is another email", EmailReplyParser.parse_reply(body)
   end
 
+  def test_parse_out_sent_from_BlackBerry_es
+    body = IO.read EMAIL_FIXTURE_PATH.join("es_email_BlackBerry.txt").to_s
+    assert_equal "Aquí otro email", EmailReplyParser.parse_reply(body)
+  end
+
   def test_parse_out_send_from_multiword_mobile_device
     body = IO.read EMAIL_FIXTURE_PATH.join("email_multi_word_sent_from_my_mobile_device.txt").to_s
     assert_equal "Here is another email", EmailReplyParser.parse_reply(body)
+  end
+
+  def test_parse_out_send_from_multiword_mobile_device_es
+    body = IO.read EMAIL_FIXTURE_PATH.join("es_email_multi_word_sent_from_my_mobile_device.txt").to_s
+    assert_equal "Aquí otro email", EmailReplyParser.parse_reply(body)
   end
 
   def test_do_not_parse_out_send_from_in_regular_sentence
