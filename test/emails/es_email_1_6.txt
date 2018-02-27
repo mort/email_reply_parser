@@ -1,0 +1,15 @@
+Yo también salgo bien.
+
+Enviado desde un gato siamés
+
+El 27 de febrero de 2016, 12:47 PM, Wadus Wadus
+<reply@reply.github.com>
+escribió:
+
+> Was this caching related or fixed already?  I get proper rendering here.
+>
+> ![](https://img.skitch.com/20111216-m9munqjsy112yqap5cjee5wr6c.jpg)
+>
+> ---
+> Reply to this email directly or view it on GitHub:
+> https://github.com/github/github/issues/2278#issuecomment-3182418

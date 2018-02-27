@@ -143,6 +143,14 @@ I am currently using the Java HTTP API.\n", reply.fragments[0].to_s
     assert_match(/Was this/, reply.fragments[1].to_s)
   end
 
+  def test_deals_with_multiline_reply_headers_es
+    reply = email :es_email_1_6
+
+    assert_match(/^Yo también/,   reply.fragments[0].to_s)
+    assert_match(/^El/,      reply.fragments[1].to_s)
+    assert_match(/Was this/, reply.fragments[1].to_s)
+  end
+
   def test_deals_with_windows_line_endings
     reply = email :email_1_7
 
